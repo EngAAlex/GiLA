@@ -85,9 +85,7 @@ public class LayoutMessage extends MessageWritable<Long, float[]> {
 	 */
 	@Override
 	public MessageWritable<Long, float[]> propagateAndDie() {
-		LayoutMessage toReturn = new LayoutMessage(payloadVertex, new float[]{value[0], value[1]});
-		if(getDeg() != -1)
-			toReturn.setDeg(getDeg());
+		LayoutMessage toReturn = new LayoutMessage(payloadVertex, new float[]{value[0], value[1]});;
 		return toReturn;
 	}
 
