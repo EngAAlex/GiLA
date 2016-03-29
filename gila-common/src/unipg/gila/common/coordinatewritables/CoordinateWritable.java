@@ -193,8 +193,10 @@ public class CoordinateWritable extends MiniCoordinateWritable{
 		fX = in.readFloat();
 		fY = in.readFloat();
 		analyzed.readFields(in);
-		if(in.readBoolean())
+		if(in.readBoolean()){
+			messageStack = new LinkedListWritable<Writable>();
 			messageStack.readFields(in);
+		}
 		justReset = in.readBoolean();
 		shortestEdge = in.readFloat();
 	}

@@ -45,16 +45,22 @@ public class FR extends Force {
 	 * @see unipg.dafne.layout.force.Force#computeAttractiveForce(float[], float)
 	 */
 	@Override
-	public float computeAttractiveForce(float deltaX, float deltaY, float distance, float squareDistance, int v1Deg, int v2Deg) {
-		return squareDistance/k;
+	public float[] computeAttractiveForce(float deltaX, float deltaY, float distance, float squareDistance, int v1Deg, int v2Deg) {
+		return new float[]{
+				deltaX*distance/k,
+				deltaY*distance/k};
+		//		return squareDistance/k;
 	}
 
 	/* (non-Javadoc)
 	 * @see unipg.dafne.layout.force.Force#computeRepulsiveForce(float[], float)
 	 */
 	@Override
-	public float computeRepulsiveForce(float deltaX, float deltaY, float distance, float squareDistance, int v1Deg, int v2Deg) {
-		return 1/distance;
+	public float[] computeRepulsiveForce(float deltaX, float deltaY, float distance, float squareDistance, int v1Deg, int v2Deg) {
+		return new float[]{
+						deltaX/squareDistance,
+						deltaY/squareDistance};
+		//		return 1/distance;
 	}
 
 }

@@ -97,4 +97,4 @@ TextVertexOutputFormat<PartitionedLongWritable, CoordinateWritable, NullWritable
 	}
 
 
-	}
+}

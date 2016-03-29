@@ -134,26 +134,26 @@ CoordinateWritable, NullWritable, LayoutMessage, LayoutMessage>{
 			float deltaY = (foreigncoords[1] - mycoords[1]);		
 
 			
-			cos = deltaX/distance;
-			sin = deltaY/distance;
-			
-			float computedForce = 0.0f;
+//			cos = deltaX/distance;
+//			sin = deltaY/distance;
+//			
+//			float computedForce = 0.0f;
 			
 			v1Deg = vertex.getNumEdges() + vValue.getOneDegreeVerticesQuantity();
 			v2Deg = currentMessage.getDeg();
 			
 			//ATTRACTIVE FORCES
 			if(vValue.hasBeenReset()){
-				computedForce = force.computeAttractiveForce(deltaX, deltaY, distance, squareDistance, v1Deg, v2Deg);
-				finalForce[0] += (computedForce*cos);
-				finalForce[1] += (computedForce*sin);
+				finalForce = force.computeAttractiveForce(deltaX, deltaY, distance, squareDistance, v1Deg, v2Deg);				
+//				finalForce[0] += (computedForce*cos);
+//				finalForce[1] += (computedForce*sin);
 			}
 
 			//REPULSIVE FORCES
-			computedForce = force.computeRepulsiveForce(deltaX, deltaY, distance, squareDistance, v1Deg, v2Deg);
-			
-			repulsiveForce[0] += (computedForce*cos);
-			repulsiveForce[1] += (computedForce*sin);
+			repulsiveForce = force.computeRepulsiveForce(deltaX, deltaY, distance, squareDistance, v1Deg, v2Deg);
+
+//			repulsiveForce[0] += (computedForce*cos);
+//			repulsiveForce[1] += (computedForce*sin);
 
 			vValue.analyze(currentPayload);
 

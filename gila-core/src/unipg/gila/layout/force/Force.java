@@ -35,8 +35,7 @@ public abstract class Force {
 	public abstract void generateForce(String args[], float k);
 	
 	/**
-	 * This method computes the attractive force module between two vertices. It will be split into its X and Y components into
-	 * the Propagator class.
+	 * This method computes the attractive force between two vertices. It returns an array of floats representing the X and Y components of the force.
 	 * 
 	 * @param deltaX The vertices distance on the X axis.
 	 * @param deltaY The vertices distance on the Y axis.
@@ -46,12 +45,11 @@ public abstract class Force {
 	 * @param v2Deg The degree of the second vertex.
 	 * @return The attractive force module exerted by v2 on v1.
 	 */
-	public abstract float computeAttractiveForce(float deltaX, float deltaY, float distance, float squareDistance, int v1Deg, int v2Deg);
+	public abstract float[] computeAttractiveForce(float deltaX, float deltaY, float distance, float squareDistance, int v1Deg, int v2Deg);
 
 	/**
 	 * 
-	 * This method computes the repulsive force module between two vertices. It will be split into its X and Y components into
-	 * the Propagator class.
+	 * This method computes the repulsive force module between two vertices. It returns an array of floats representing the X and Y components of the force.
 	 * 
 	 * @param deltaX The vertices distance on the X axis.
 	 * @param deltaY The vertices distance on the Y axis.
@@ -61,6 +59,6 @@ public abstract class Force {
 	 * @param v2Deg The degree of the second vertex.
 	 * @return The repulsive force module exerted by v2 on v1.
 	 */
-	public abstract float computeRepulsiveForce(float deltaX, float deltaY, float distance, float squareDistance, int v1Deg, int v2Deg);
+	public abstract float[] computeRepulsiveForce(float deltaX, float deltaY, float distance, float squareDistance, int v1Deg, int v2Deg);
 
 }
