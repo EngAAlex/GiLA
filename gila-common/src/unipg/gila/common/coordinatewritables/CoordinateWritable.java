@@ -111,8 +111,8 @@ public class CoordinateWritable extends MiniCoordinateWritable{
 	}
 	
 	/**
-	 * Returns true if the vertex has been reset (resetAnalyzed has been called).
-	 * @return
+	 * Returns true if the vertex has been reset (resetAnalyzed has been called during the last superstep).
+	 * @return true if the vertex has been reset in the last superstep.
 	 */
 	public boolean hasBeenReset(){
 		return justReset;

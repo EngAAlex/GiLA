@@ -27,7 +27,7 @@ import org.apache.hadoop.io.Writable;
 import org.apache.hadoop.io.WritableFactories;
 
 /**
- * Implementation of a Set implementing the Writable (org.apache.hadoop.io.Writable) interface.
+ * Abstract implementation of a Set implementing the Writable (org.apache.hadoop.io.Writable) interface. Needs to be extended to support specific type of objects.
  * 
  * @author Alessio Arleo
  *
