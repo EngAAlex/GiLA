@@ -49,7 +49,6 @@ public class FR extends Force {
 		return new float[]{
 				deltaX*distance/k,
 				deltaY*distance/k};
-		//		return squareDistance/k;
 	}
 
 	/* (non-Javadoc)
@@ -60,7 +59,6 @@ public class FR extends Force {
 		return new float[]{
 						deltaX/squareDistance,
 						deltaY/squareDistance};
-		//		return 1/distance;
 	}
 
 }

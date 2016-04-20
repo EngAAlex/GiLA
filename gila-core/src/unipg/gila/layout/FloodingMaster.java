@@ -100,14 +100,14 @@ public class FloodingMaster extends DefaultMasterCompute {
 	public final static String node_length = "layout.node_length";
 	public final static String node_width = "layout.node_width";
 	public final static String node_separation = "layout.node_separation";
-	public final String initialTempFactorString = "layout.initialTempFactor";
+	public static final String initialTempFactorString = "layout.initialTempFactor";
 	public static final String coolingSpeed = "layout.coolingSpeed";
 	public static final String walshawModifierString = "layout.walshawModifier";
 	public static final String accuracyString = "layout.accuracy";
 	public static final float walshawModifierDefault = 0.052f;
 	public final static float defaultNodeValue = 20.0f;
-	public float defaultInitialTempFactor = 0.4f;
-	public final String defaultCoolingSpeed = "0.93";
+	public static final float defaultInitialTempFactor = 0.4f;
+	public static final String defaultCoolingSpeed = "0.93";
 	public static final float accuracyDefault = 0.01f;
 	public static final String forceMethodOptionString = "layout.forceModel";
 	public static final String forceMethodOptionExtraOptionsString = "layout.forceModel.extraOptions";
@@ -251,8 +251,7 @@ public class FloodingMaster extends DefaultMasterCompute {
 			
 			correctedSizeMap.put(key, new FloatWritableArray(correctedSizes));
 			tempMap.put(key, new FloatWritableArray(temps));
-			scaleFactorMap.put(key, new FloatWritableArray(scaleFactors));
-			
+			scaleFactorMap.put(key, new FloatWritableArray(scaleFactors));			
 		}
 		
 		setAggregatedValue(correctedSizeAGG, correctedSizeMap);

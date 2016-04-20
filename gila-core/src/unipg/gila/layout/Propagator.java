@@ -116,8 +116,6 @@ CoordinateWritable, NullWritable, LayoutMessage, LayoutMessage>{
 		
 		int v1Deg;
 		int v2Deg;
-
-		float[] tempForce = null;
 		
 		while(it.hasNext()){	
 			LayoutMessage currentMessage = it.next();
@@ -134,23 +132,17 @@ CoordinateWritable, NullWritable, LayoutMessage, LayoutMessage>{
 
 			float deltaX = (foreigncoords[0] - mycoords[0]);
 			float deltaY = (foreigncoords[1] - mycoords[1]);		
-
-			
-//			cos = deltaX/distance;
-//			sin = deltaY/distance;
-//			
-//			float computedForce = 0.0f;
 			
 			v1Deg = vertex.getNumEdges() + vValue.getOneDegreeVerticesQuantity();
 			v2Deg = currentMessage.getDeg();
+			
+			float[] tempForce = new float[]{0.0f, 0.0f};
 						
 			//ATTRACTIVE FORCES
 			if(vValue.hasBeenReset()){
 				tempForce = force.computeAttractiveForce(deltaX, deltaY, distance, squareDistance, v1Deg, v2Deg);				
 				finalForce[0] += tempForce[0];
 				finalForce[1] += tempForce[1];
-//				finalForce[0] += (computedForce*cos);
-//				finalForce[1] += (computedForce*sin);
 			}
 
 			//REPULSIVE FORCES
