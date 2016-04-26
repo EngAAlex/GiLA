@@ -30,7 +30,7 @@ import java.io.IOException;
  */
 public class LayoutMessage extends MessageWritable<Long, float[]> {
 
-	private int deg;
+	private int deg = -1;
 	
 	/**
 	 * Parameter-less constructor
@@ -61,6 +61,18 @@ public class LayoutMessage extends MessageWritable<Long, float[]> {
 		super(payloadVertex, ttl, coords);		
 	}
 	
+	/**
+	 * Creates a new PlainMessage with the given ttl and the given deg.
+	 * 
+	 * @param payloadVertex
+	 * @param ttl
+	 * @param coords
+	 */
+	public LayoutMessage(long payloadVertex, int ttl, float[] coords, int deg){
+		this(payloadVertex, ttl, coords);
+		setDeg(deg);
+	}
+	
 	public void setDeg(int deg){
 		this.deg = deg;
 	}
@@ -74,9 +86,7 @@ public class LayoutMessage extends MessageWritable<Long, float[]> {
 	 */
 	@Override
 	public MessageWritable<Long, float[]> propagate() {
-		LayoutMessage toReturn = new LayoutMessage(payloadVertex, ttl-1, new float[]{value[0], value[1]});
-		if(getDeg() != -1)
-			toReturn.setDeg(getDeg());
+		LayoutMessage toReturn = new LayoutMessage(payloadVertex, ttl-1, new float[]{value[0], value[1]}, deg);
 		return toReturn;
 	}
 
@@ -85,7 +95,7 @@ public class LayoutMessage extends MessageWritable<Long, float[]> {
 	 */
 	@Override
 	public MessageWritable<Long, float[]> propagateAndDie() {
-		LayoutMessage toReturn = new LayoutMessage(payloadVertex, new float[]{value[0], value[1]});;
+		LayoutMessage toReturn = new LayoutMessage(payloadVertex, 0, new float[]{value[0], value[1]}, deg);
 		return toReturn;
 	}
 
@@ -98,9 +108,7 @@ public class LayoutMessage extends MessageWritable<Long, float[]> {
 		value = new float[2];
 		value[0] = in.readFloat();
 		value[1] = in.readFloat();
-		if(in.readBoolean())
-			deg = in.readInt();
-			
+		deg = in.readInt();			
 	}
 
 	/* (non-Javadoc)
@@ -111,12 +119,7 @@ public class LayoutMessage extends MessageWritable<Long, float[]> {
 		out.writeLong(payloadVertex);
 		out.writeFloat(value[0]);
 		out.writeFloat(value[1]);
-		if(getDeg() == -1)
-			out.writeBoolean(false);
-		else{
-			out.writeBoolean(true);
-			out.writeInt(deg);
-		}
+		out.writeInt(deg);
 	}
 
 }

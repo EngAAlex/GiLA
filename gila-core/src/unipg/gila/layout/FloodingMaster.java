@@ -77,11 +77,6 @@ public class FloodingMaster extends DefaultMasterCompute {
 	public static final int maxSstepsDefault = 1500;
 	public static final float defaultConvergenceThreshold = 0.85f;
 
-	//MESSAGES OPTIONS
-	public static final String useQueuesString = "flooding.useQueues";
-	public static final String queueUnloadFactor = "layout.queueUnloadFactor";
-	public static final float queueUnloadFactorDefault = 0.1f;
-
 	//REINTEGRATION OPTIONS
 	public static final String radiusString = "reintegration.radius";
 	public static final String dynamicRadiusString = "reintegration.dynamicRadius";
@@ -111,7 +106,6 @@ public class FloodingMaster extends DefaultMasterCompute {
 	public static final float accuracyDefault = 0.01f;
 	public static final String forceMethodOptionString = "layout.forceModel";
 	public static final String forceMethodOptionExtraOptionsString = "layout.forceModel.extraOptions";
-	public static final String sendDegTooOptionString = "layout.sendDegreeIntoLayoutMessages";
 	private static final String repulsiveForceModerationString = "layout.repulsiveForceModerationFactor";	
 	
 	//INPUT OPTIONS
@@ -141,7 +135,7 @@ public class FloodingMaster extends DefaultMasterCompute {
 	//COUNTERS
 	protected static final String COUNTER_GROUP = "Drawing Counters";
 	
-	private static String minRationThresholdString = "layout.minRatioThreshold";
+	private final static String minRationThresholdString = "layout.minRatioThreshold";
 	private float defaultMinRatioThreshold = 0.2f;
 
 	//VARIABLES
@@ -203,7 +197,7 @@ public class FloodingMaster extends DefaultMasterCompute {
 		float walshawModifier = getConf().getFloat(walshawModifierString, walshawModifierDefault);
 		
 		setAggregatedValue(walshawConstant_agg, 
-				new FloatWritable(getConf().getFloat(repulsiveForceModerationString,(float) (Math.pow(k, 2) * walshawModifier))));
+				new FloatWritable(getConf().getFloat(repulsiveForceModerationString, new Float(Math.pow(k, 2) * walshawModifier))));
 		
 		coolingStrategy = new LinearCoolingStrategy(new String[]{getConf().get(FloodingMaster.coolingSpeed, defaultCoolingSpeed )});
 	}
@@ -271,8 +265,7 @@ public class FloodingMaster extends DefaultMasterCompute {
 			Entry<Writable, Writable> currentTemp = tempsIterator.next();
 			float[] temps = ((FloatWritableArray)currentTemp.getValue()).get();
 			newTempsMap.put(currentTemp.getKey(), new FloatWritableArray(new float[]{coolingStrategy.cool(temps[0]),
-																					 coolingStrategy.cool(temps[1])}));
-			
+																					 coolingStrategy.cool(temps[1])}));			
 		}		
 		setAggregatedValue(tempAGG, newTempsMap);
 	}

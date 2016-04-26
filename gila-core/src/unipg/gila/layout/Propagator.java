@@ -31,6 +31,7 @@ import org.apache.hadoop.io.FloatWritable;
 import org.apache.hadoop.io.LongWritable;
 import org.apache.hadoop.io.NullWritable;
 import org.apache.hadoop.io.Writable;
+import org.apache.log4j.Logger;
 
 import unipg.gila.common.coordinatewritables.CoordinateWritable;
 import unipg.gila.common.datastructures.PartitionedLongWritable;
@@ -57,18 +58,13 @@ import unipg.gila.utils.Toolbox;
 public class Propagator extends AbstractComputation<PartitionedLongWritable, 
 CoordinateWritable, NullWritable, LayoutMessage, LayoutMessage>{
 
-	protected boolean useQueues;
+	//LOGGER
+	Logger log = Logger.getLogger(Propagator.class);
+	
 	protected float minimumForceThreshold;
 	protected Float k;
-	protected float walshawConstant;
-	private float queueFlushRatio;
-	
+	protected float walshawConstant;	
 	protected Force force;
-	protected boolean useCosSin;
-	
-	protected float cos;
-	protected float sin;
-
 
 	@SuppressWarnings("unchecked")
 	@Override
@@ -84,9 +80,6 @@ CoordinateWritable, NullWritable, LayoutMessage, LayoutMessage>{
 		k = ((FloatWritable)getAggregatedValue(FloodingMaster.k_agg)).get();
 		walshawConstant = ((FloatWritable)getAggregatedValue(FloodingMaster.walshawConstant_agg)).get();
 
-		useQueues = getConf().getBoolean(FloodingMaster.useQueuesString, false);
-		queueFlushRatio = getConf().getFloat(FloodingMaster.queueUnloadFactor, 0.1f);
-		
 		try {
 			force = ((Class<Force>)Class.forName(getConf().get(FloodingMaster.forceMethodOptionString, FR.class.toString()))
 						).newInstance();
@@ -109,8 +102,6 @@ CoordinateWritable, NullWritable, LayoutMessage, LayoutMessage>{
 		float[] mycoords = vValue.getCoordinates();;	
 		float[] foreigncoords;
 
-		float distance;
-
 		float[] finalForce = new float[]{0.0f, 0.0f};
 		float[] repulsiveForce = new float[]{0.0f, 0.0f};
 		
@@ -128,40 +119,32 @@ CoordinateWritable, NullWritable, LayoutMessage, LayoutMessage>{
 			foreigncoords=currentMessage.getValue();
 
 			float squareDistance = Toolbox.squareModule(mycoords, foreigncoords);
-			distance = (float) Math.sqrt(squareDistance);
-
-			float deltaX = (foreigncoords[0] - mycoords[0]);
-			float deltaY = (foreigncoords[1] - mycoords[1]);		
+			float distance = new Float(Math.sqrt(squareDistance));
+			
+			float deltaX = foreigncoords[0] - mycoords[0];
+			float deltaY = foreigncoords[1] - mycoords[1];		
 			
 			v1Deg = vertex.getNumEdges() + vValue.getOneDegreeVerticesQuantity();
 			v2Deg = currentMessage.getDeg();
-			
-			float[] tempForce = new float[]{0.0f, 0.0f};
-						
+									
 			//ATTRACTIVE FORCES
 			if(vValue.hasBeenReset()){
-				tempForce = force.computeAttractiveForce(deltaX, deltaY, distance, squareDistance, v1Deg, v2Deg);				
+				float[] tempForce = force.computeAttractiveForce(deltaX, deltaY, distance, squareDistance, v1Deg, v2Deg);				
 				finalForce[0] += tempForce[0];
 				finalForce[1] += tempForce[1];
 			}
 
 			//REPULSIVE FORCES
-			tempForce = force.computeRepulsiveForce(deltaX, deltaY, distance, squareDistance, v1Deg, v2Deg);
+			float [] tempForce = force.computeRepulsiveForce(deltaX, deltaY, distance, squareDistance, v1Deg, v2Deg);
 
 			repulsiveForce[0] += tempForce[0];
 			repulsiveForce[1] += tempForce[1];
 			
-//			repulsiveForce[0] += (computedForce*cos);
-//			repulsiveForce[1] += (computedForce*sin);
-
 			vValue.analyze(currentPayload);
 
 			if(!currentMessage.isAZombie()){
 				aggregate(FloodingMaster.MessagesAggregatorString, new BooleanWritable(false));
-				if(!useQueues)
-					sendMessageToAllEdges(vertex, (LayoutMessage) currentMessage.propagate());					
-				else
-					vertex.getValue().enqueueMessage(currentMessage.propagate());	
+				sendMessageToAllEdges(vertex, (LayoutMessage) currentMessage.propagate());					
 			}
 
 		}
@@ -175,21 +158,6 @@ CoordinateWritable, NullWritable, LayoutMessage, LayoutMessage>{
 
 		vValue.setAsMoving();
 		vValue.addToForceVector(finalForce);
-
-		if(!useQueues)
-			return;
-
-		Writable[] toDequeue = vValue.dequeueMessages(new Double(Math.ceil(queueFlushRatio*vertex.getNumEdges())).intValue());
-
-		for(int i=0; i<toDequeue.length; i++){
-			LayoutMessage current = (LayoutMessage) toDequeue[i];
-			if(current != null){
-				aggregate(FloodingMaster.MessagesAggregatorString, new BooleanWritable(false));
-				sendMessageToAllEdges(vertex, current);
-			}
-			else
-				break;
-		}
 
 	}
 

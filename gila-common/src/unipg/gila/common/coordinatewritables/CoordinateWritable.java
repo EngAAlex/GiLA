@@ -55,7 +55,6 @@ public class CoordinateWritable extends MiniCoordinateWritable{
 	 * The shortest incident edge.
 	 */
 	protected float shortestEdge = Float.MAX_VALUE;
-	protected LinkedListWritable<Writable> messageStack;
 
 	public CoordinateWritable(){
 		super();
@@ -153,39 +152,6 @@ public class CoordinateWritable extends MiniCoordinateWritable{
 		if(shortestEdge < this.shortestEdge)
 			this.shortestEdge = shortestEdge;
 	}
-	
-	public boolean isMessageStackEmpty(){
-		return messageStack.isEmpty();
-	}
-	
-	public void enqueueMessage(Writable w){
-		if(messageStack == null)
-			messageStack = new LinkedListWritable();
-		messageStack.enqueue(w);
-	}
-	
-	public Writable[] dequeueAllMessages() {
-		return messageStack.flush();
-	}
-	
-	public int messageLeftInStack(){
-		if(messageStack == null)
-			return 0;
-		return messageStack.size();
-	}
-
-	public Writable[] dequeueMessages(int messages){
-		int capacity = messageStack.isEmpty() ? 0 : Math.min(messages, messageStack.size()); 
-		Writable[] result = new Writable[capacity];
-		for(int i=0; i<result.length; i++){
-			Writable temp = messageStack.dequeue();
-			if(temp == null)
-				break;
-			else
-				result[i] = temp;
-		}
-		return result;
-	}
 
 	@Override
 	public void readFields(DataInput in) throws IOException {
@@ -193,10 +159,6 @@ public class CoordinateWritable extends MiniCoordinateWritable{
 		fX = in.readFloat();
 		fY = in.readFloat();
 		analyzed.readFields(in);
-		if(in.readBoolean()){
-			messageStack = new LinkedListWritable<Writable>();
-			messageStack.readFields(in);
-		}
 		justReset = in.readBoolean();
 		shortestEdge = in.readFloat();
 	}
@@ -207,12 +169,6 @@ public class CoordinateWritable extends MiniCoordinateWritable{
 		out.writeFloat(fX);
 		out.writeFloat(fY);
 		analyzed.write(out);
-		if(messageLeftInStack() == 0)
-			out.writeBoolean(false);
-		else{
-			out.writeBoolean(true);
-			messageStack.write(out);
-		}
 		out.writeBoolean(justReset);
 		out.writeFloat(shortestEdge);
 	}

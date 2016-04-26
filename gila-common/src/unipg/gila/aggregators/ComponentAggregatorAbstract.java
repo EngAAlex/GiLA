@@ -138,7 +138,8 @@ public abstract class ComponentAggregatorAbstract implements Aggregator<MapWrita
 
 		@Override
 		protected float[] checkEligibility(float[] mycoords, float[] newest) {
-			float[] arrayToSave = new float[]{Math.min(mycoords[0], newest[0]),
+			float[] arrayToSave = new float[]{
+					Math.min(mycoords[0], newest[0]),
 					Math.min(mycoords[1], newest[1])};
 			return arrayToSave;
 		};	

@@ -55,9 +55,7 @@ AbstractComputation<PartitionedLongWritable, CoordinateWritable, NullWritable, L
 	
 	MapWritable tempsMap;
 	MapWritable sizesMap;
-	
-	boolean sendDegToo;
-	
+		
 	@Override
 	public void initialize(
 			GraphState graphState,
@@ -72,8 +70,6 @@ AbstractComputation<PartitionedLongWritable, CoordinateWritable, NullWritable, L
 
 		tempsMap = getAggregatedValue(FloodingMaster.tempAGG);
 		sizesMap = getAggregatedValue(FloodingMaster.correctedSizeAGG);
-		
-		sendDegToo = getConf().getBoolean(FloodingMaster.sendDegTooOptionString, false);
 	}
 
 	@Override
@@ -130,9 +126,8 @@ AbstractComputation<PartitionedLongWritable, CoordinateWritable, NullWritable, L
 	protected void gatherAndSend(Vertex<PartitionedLongWritable, CoordinateWritable, NullWritable> vertex, float[] coords){
 		LayoutMessage toSend = new LayoutMessage(vertex.getId().getId(), 
 				ttlmax - 1,
-				coords);
-		if(sendDegToo)
-			toSend.setDeg(vertex.getNumEdges()+vertex.getValue().getOneDegreeVerticesQuantity());
+				coords,
+				vertex.getNumEdges()+vertex.getValue().getOneDegreeVerticesQuantity());
 		sendMessageToAllEdges(vertex, toSend);
 	}
 
