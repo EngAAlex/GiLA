@@ -15,34 +15,33 @@
  *******************************************************************************/
 package unipg.gila.aggregators;
 
-import java.util.HashSet;
-
 import org.apache.giraph.aggregators.Aggregator;
-import org.apache.hadoop.io.LongWritable;
 
-public class SetAggregator implements Aggregator<LongWritable> {
+import unipg.gila.common.datastructures.LongWritableSet;
 
-	private HashSet<Long> internalState;
+public class SetAggregator implements Aggregator<LongWritableSet> {
+
+	private LongWritableSet internalState;
 	
-	public void aggregate(LongWritable in) {
-		internalState.add(in.get());
+	public void aggregate(LongWritableSet in) {
+		internalState.addAll(in.get());
 	}
 
-	public LongWritable createInitialValue() {
-		internalState = new HashSet<Long>();
-		return new LongWritable(0);
+	public LongWritableSet createInitialValue() {
+		internalState = new LongWritableSet();
+		return internalState;
 	}
 
-	public LongWritable getAggregatedValue() {
-		return new LongWritable(internalState.size());
+	public LongWritableSet getAggregatedValue() {
+		return internalState;
 	}
 
 	public void reset() {
-		internalState.clear();
+		internalState.reset();
 	}
 
-	public void setAggregatedValue(LongWritable initialSeed) {
-		createInitialValue();
+	public void setAggregatedValue(LongWritableSet initialSeed) {
+		internalState = initialSeed;
 	}
 
 }

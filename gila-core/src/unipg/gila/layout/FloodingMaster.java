@@ -47,6 +47,7 @@ import unipg.gila.aggregators.ComponentAggregatorAbstract.ComponentIntSumAggrega
 import unipg.gila.aggregators.ComponentAggregatorAbstract.ComponentMapOverwriteAggregator;
 import unipg.gila.common.coordinatewritables.CoordinateWritable;
 import unipg.gila.common.datastructures.FloatWritableArray;
+import unipg.gila.common.datastructures.LongWritableSet;
 import unipg.gila.common.datastructures.PartitionedLongWritable;
 import unipg.gila.common.datastructures.messagetypes.LayoutMessage;
 import unipg.gila.coolingstrategies.CoolingStrategy;
@@ -127,7 +128,7 @@ public class FloodingMaster extends DefaultMasterCompute {
 	public final static String tempAGG = "AGG_TEMP";
 	public static final String correctedSizeAGG = "AGG_CORR_SIZE";
 	protected final static String scaleFactorAgg = "AGG_SCALEFACTOR";
-	protected final static String componentNumber = "AGG_COMP_NUMBER";
+//	protected final static String componentNumber = "AGG_COMP_NUMBER";
 	protected final static String componentNoOfNodes = "AGG_COMPONENT_NO_OF_NODES";
 	public static final String tempAggregator = "AGG_TEMP";
 	protected static final String offsetsAggregator = "AGG_CC_BOXES";
@@ -184,7 +185,7 @@ public class FloodingMaster extends DefaultMasterCompute {
 		
 		//COMPONENT DATA AGGREGATORS
 		
-		registerPersistentAggregator(componentNumber, SetAggregator.class);
+//		registerPersistentAggregator(componentNumber, SetAggregator.class);
 		registerPersistentAggregator(componentNoOfNodes, ComponentIntSumAggregator.class);
 		registerAggregator(offsetsAggregator, ComponentMapOverwriteAggregator.class);
 
@@ -503,7 +504,9 @@ public class FloodingMaster extends DefaultMasterCompute {
 				information.put(new LongWritable(vValue.getComponent()), 
 						new IntWritable((int)1 + vertex.getValue().getOneDegreeVerticesQuantity()));
 				aggregate(componentNoOfNodes, information);
-				aggregate(componentNumber, new LongWritable(vValue.getComponent()));
+//				LongWritableSet toAggregate = new LongWritableSet();
+//				toAggregate.addElement(new LongWritable(vValue.getComponent()));
+//				aggregate(componentNumber, toAggregate);
 				}
 		}
 	}
