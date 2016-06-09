@@ -123,7 +123,7 @@ AbstractComputation<PartitionedLongWritable, CoordinateWritable, NullWritable, L
 		vValue.resetAnalyzed();
 	}
 
-	protected void gatherAndSend(Vertex<PartitionedLongWritable, CoordinateWritable, NullWritable> vertex, float[] coords){
+	private void gatherAndSend(Vertex<PartitionedLongWritable, CoordinateWritable, NullWritable> vertex, float[] coords){
 		LayoutMessage toSend = new LayoutMessage(vertex.getId().getId(), 
 				ttlmax - 1,
 				coords,
