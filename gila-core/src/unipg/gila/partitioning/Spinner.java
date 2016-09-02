@@ -145,6 +145,7 @@ public class Spinner {
 	public static final String bBoxStringY = "partitioning.input.bBox.Y";
 	
 	public static final String pruneOneDegreesString = "partitioning.pruneOneDegrees";
+	private static final String PRUNED_VERTICES_COUNTER = "Pruned vertices";
 
 	public static class ComputeNewPartition
 	extends
@@ -530,6 +531,7 @@ public class Spinner {
 					removeEdgesRequest(vertex.getId(), new LongWritable(other.getPayloadVertex()));
 					removeEdgesRequest(new LongWritable(other.getPayloadVertex()), vertex.getId());
 					removeVertexRequest(new LongWritable(other.getPayloadVertex()));
+					getContext().getCounter(COUNTER_GROUP, PRUNED_VERTICES_COUNTER).increment(1);
 					continue;
 				}				
 				EdgeValue edgeValue = vertex.getEdgeValue(new LongWritable(other.getPayloadVertex()));				

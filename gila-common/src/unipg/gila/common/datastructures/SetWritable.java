@@ -34,8 +34,7 @@ import org.apache.hadoop.io.WritableFactories;
  * @param <P> The class of the object contained in the set. Must implement Writable.
  */
 public abstract class SetWritable<P extends Writable> implements Writable {
-	
-	
+		
 	protected Set<P> internalState;	
 		
 	public void addAll(Collection<P> it){
@@ -71,7 +70,7 @@ public abstract class SetWritable<P extends Writable> implements Writable {
 	}
 
 	public void readFields(DataInput in) throws IOException {
-		internalState.clear();
+		reset();
 		int limit = in.readInt();
 	    for (int i = 0; i < limit; i++) {
 	    	internalState.add(specificRead(in));                       
@@ -87,7 +86,9 @@ public abstract class SetWritable<P extends Writable> implements Writable {
 	protected abstract P specificRead(DataInput in) throws IOException;
 	
 	public void write(DataOutput out) throws IOException {
-		out.writeInt(internalState.size());
+		out.writeInt(size());
+		if(size() == 0)
+			return;
 		Iterator<P> it = internalState.iterator();
 		while(it.hasNext())
 			it.next().write(out);

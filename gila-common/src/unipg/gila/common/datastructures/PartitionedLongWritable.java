@@ -58,8 +58,8 @@ public class PartitionedLongWritable implements WritableComparable<Object>{
 		}
 
 		public void readFields(DataInput in) throws IOException{
-				partition = in.readShort();
-				id = in.readLong();			
+			partition = in.readShort();
+			id = in.readLong();	
 		}
 
 		public void write(DataOutput out) throws IOException {
@@ -92,7 +92,7 @@ public class PartitionedLongWritable implements WritableComparable<Object>{
 			return (int) id;
 		}
 
-		public Short getPartition() {
+		public short getPartition() {
 			return partition;
 		}
 

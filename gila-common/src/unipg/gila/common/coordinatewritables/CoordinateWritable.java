@@ -64,7 +64,7 @@ public class CoordinateWritable extends MiniCoordinateWritable{
 		justReset = false;
 	}
 	
-	public CoordinateWritable(Float x, Float y, int component){
+	public CoordinateWritable(float x, float y, int component){
 		super(x, y, component);
 		fX = 0.0f;
 		fY = 0.0f;			
