@@ -82,19 +82,21 @@ TextVertexOutputFormat<PartitionedLongWritable, CoordinateWritable, NullWritable
 			
 			return new Text("[" + vertex.getId().getId() + "," + partition + cohords[0] + "," + cohords[1] + component + ",[" + edgeBundler(vertex.getEdges()) + "]]");
 		}
+		
+	  private String edgeBundler(Iterable<Edge<PartitionedLongWritable, NullWritable>> edges){
+	    String result = "";
+	    Iterator<Edge<PartitionedLongWritable, NullWritable>> it = edges.iterator();
+	    while(it.hasNext()){
+	      Edge<PartitionedLongWritable, NullWritable> edge = it.next();
+	      if(showPartitioning)
+	        result += "[" + edge.getTargetVertexId().getId() + "," + edge.getTargetVertexId().getPartition() + "]";
+	      else
+	        result += edge.getTargetVertexId().getId();
+	      if(it.hasNext())
+	        result += ",";
+	    }
+	    return result;
+	  }
 	}
-
-	private String edgeBundler(Iterable<Edge<PartitionedLongWritable, NullWritable>> edges){
-		String result = "";
-		Iterator<Edge<PartitionedLongWritable, NullWritable>> it = edges.iterator();
-		while(it.hasNext()){
-			Edge<PartitionedLongWritable, NullWritable> edge = it.next();
-			result += "[" + edge.getTargetVertexId().getId() + "," + edge.getTargetVertexId().getPartition() + "]";
-			if(it.hasNext())
-				result += ",";
-		}
-		return result;
-	}
-
 
 }
